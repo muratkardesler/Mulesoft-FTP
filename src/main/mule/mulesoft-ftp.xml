@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ftp="http://www.mulesoft.org/schema/mule/ftp" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ftp http://www.mulesoft.org/schema/mule/ftp/current/mule-ftp.xsd">
+	<ftp:config name="FTP_Config" doc:name="FTP Config" doc:id="de332243-03f1-47c0-af8c-c23df8a35e98" >
+		<ftp:connection workingDir="libs" host="localhost" username="admin" password="admin" />
+	</ftp:config>
+	<flow name="mulesoft-ftpFlow" doc:id="77811632-974e-4b19-a96c-42f1631e0076" >
+		<scheduler doc:name="Scheduler" doc:id="47789d82-afc7-46fe-a6ad-482dacfffa10" >
+			<scheduling-strategy >
+				<fixed-frequency frequency="2" timeUnit="MINUTES"/>
+			</scheduling-strategy>
+		</scheduler>
+		<logger level="INFO" doc:name="Start Flow" doc:id="10ec149b-73ff-4009-b195-efd5adc0f180" message="StartFlowFTP"/>
+		<ftp:read doc:id="8e453dd0-20fb-4bf9-a606-bcbc22efdbce" config-ref="FTP_Config" path="libs"/>
+		<logger level="INFO" doc:name="STOP Flow" doc:id="fd5d4224-eb30-46c2-84ed-e3cb1334f58a" />
+	</flow>
+</mule>
