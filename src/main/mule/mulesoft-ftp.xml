@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:ftp="http://www.mulesoft.org/schema/mule/ftp" xmlns="http://www.mulesoft.org/schema/mule/core"
-	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/ftp http://www.mulesoft.org/schema/mule/ftp/current/mule-ftp.xsd">
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:ftp="http://www.mulesoft.org/schema/mule/ftp"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ftp http://www.mulesoft.org/schema/mule/ftp/current/mule-ftp.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
 	<ftp:config name="FTP_Config" doc:name="FTP Config" doc:id="de332243-03f1-47c0-af8c-c23df8a35e98" >
 		<ftp:connection workingDir="libs" host="localhost" username="admin" password="admin" />
 	</ftp:config>
@@ -16,5 +18,24 @@ http://www.mulesoft.org/schema/mule/ftp http://www.mulesoft.org/schema/mule/ftp/
 		<logger level="INFO" doc:name="Start Flow" doc:id="10ec149b-73ff-4009-b195-efd5adc0f180" message="StartFlowFTP"/>
 		<ftp:read doc:id="8e453dd0-20fb-4bf9-a606-bcbc22efdbce" config-ref="FTP_Config" path="libs"/>
 		<logger level="INFO" doc:name="STOP Flow" doc:id="fd5d4224-eb30-46c2-84ed-e3cb1334f58a" />
+	</flow>
+	<flow name="mulesoft-ftpFlow1" doc:id="0c60bcbc-94b9-48d4-a277-b7c58c06a0b3" >
+		<scheduler doc:name="Scheduler" doc:id="70d919bb-03e2-46d1-a315-94c8025df048" >
+			<scheduling-strategy >
+				<fixed-frequency frequency="2" timeUnit="MINUTES" />
+			</scheduling-strategy>
+		</scheduler>
+		<db:select doc:id="7d0e551a-51f4-484c-a82f-466c552322c4" >
+			<db:sql ><![CDATA[select emp_id, emp_name, emp_status from emp]]></db:sql>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="af5e94cc-0f2e-40cf-833e-f5eb3fe0d15f" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
 	</flow>
 </mule>
