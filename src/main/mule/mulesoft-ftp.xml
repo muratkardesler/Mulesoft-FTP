@@ -31,11 +31,18 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 		<ee:transform doc:name="Transform Message" doc:id="af5e94cc-0f2e-40cf-833e-f5eb3fe0d15f" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
-output application/json
+output application/xlsx
 ---
-payload
+{
+	employeedata: payload map ( payload01 , indexOfPayload)->{
+		id: payload01.EMP_ID,
+		name: payload01.EMP_NAME,
+		status: payload01.EMP_STATUS
+	}
+}
 ]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
+		<ftp:write doc:name="Write" doc:id="4d8404ac-9ee1-4ce3-8452-8017dbc489b6" config-ref="FTP_Config" path="libs"/>
 	</flow>
 </mule>
